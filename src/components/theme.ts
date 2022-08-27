@@ -11,6 +11,12 @@ export const customTheme = deepFreeze(
                 "focus": "#006AA7",
                 "accent-1": "#006AA7",
             }
-        }
+        },
+        "heading": {
+            "font": {
+                "family": "Lato",
+            },
+            "weight": "bold",
+        },
     }
-)
+);

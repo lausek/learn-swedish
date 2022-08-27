@@ -55,7 +55,7 @@ const NounGenderChoice = (props: { onSelect: (gender: WordGender) => void }) => 
 };
 
 const NounGenderResult = (props: { noun: Word, result: boolean, onNext: () => void }) => {
-    return <Box pad="large" gap="large">
+    return <Box pad="large" direction="row" justify="center">
         <Button primary size="large" color={props.result ? "status-ok" : "status-error"} label={`${getGenderArticle(props.noun.gender)} ${props.noun.sv}`} onClick={props.onNext} />
     </Box>;
 };
