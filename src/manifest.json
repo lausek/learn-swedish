@@ -1,6 +1,6 @@
 {
   "name": "Learn Swedish",
-  "short_name": "learn-swedish",
+  "short_name": "Learn Swedish",
   "start_url": "/",
   "scope": ".",
   "display": "standalone",

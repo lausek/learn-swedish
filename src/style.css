@@ -1,5 +1,18 @@
 body {
-    margin: 0;
+  margin: 0;
+}
+
+/* PWA specific */
+body {
+  /* disable selection */
+  user-select: none;
+  -webkit-user-select: none;
+
+  /* disable tap highlight color */
+  -webkit-tap-highlight-color: transparent;
+
+  /* disable callouts */
+  -webkit-touch-callout: none;
 }
 
 /* cyrillic-ext */
