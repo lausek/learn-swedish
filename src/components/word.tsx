@@ -1,13 +1,13 @@
 import { Box, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
 import { h } from "preact";
 import { Word } from "../dictionary";
-import { Statistics } from "../routes/quiz";
+import { Statistics } from "../routes/quiz/statistics";
 
 const Annotation = (props: any) => <Text color="gray">{props.children}</Text>;
 
 interface WordCardProps {
     word: Word;
-    statistics: Statistics;
+    statistics?: Statistics;
     explainWord?: boolean
 }
 
@@ -27,7 +27,9 @@ export function WordCard(props: WordCardProps) {
                 )}
             </CardBody>
             <CardFooter pad="medium" background="light-1" justify="end">
-                <Text>Correct {props.statistics.correct} / {props.statistics.total}</Text>
+                {props.statistics && (
+                    <Text>Correct {props.statistics.correct} / {props.statistics.total}</Text>
+                )}
             </CardFooter>
         </Card>
     </Box>;

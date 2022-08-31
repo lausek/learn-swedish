@@ -1,9 +1,9 @@
 import { Box, Button } from "grommet";
 import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { Statistics } from ".";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
+import { Statistics } from "./statistics";
 
 interface VerbQuizChoiceProps {
     onSelect: (word: Word) => void;

@@ -1,9 +1,9 @@
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { Statistics } from ".";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
+import { Statistics } from "./statistics";
 
 const GenderQuizChoice = (props: { onSelect: (gender: WordGender) => void }) => {
     return <Box pad="medium" gap="large" direction="row" justify="center">
