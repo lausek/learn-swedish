@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "license": "GPL-3.0-only",
   "scripts": {
-    "build": "parcel build src/template.html",
-    "dev": "parcel src/template.html --host 0.0.0.0",
+    "build": "parcel build src/index.html",
+    "dev": "parcel src/index.html --host 0.0.0.0",
     "lint": "eslint src",
     "test": "jest"
   },
