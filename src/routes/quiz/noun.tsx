@@ -1,6 +1,7 @@
 import { Box, Button } from "grommet";
 import { h } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
+import { Statistics } from ".";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
@@ -28,41 +29,48 @@ const NounQuizResult = (props: { noun: Word, result: boolean, onNext: () => void
 
 const NounQuiz = () => {
     const words = new Dictionary().nouns();
-    const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
-    const [statistics, setStatistics] = useState({ correct: 0, total: 0});
-    const [result, setResult] = useState<boolean | null>(null);
-    const checkTranslation = (word: Word) => {
-        console.log(word.sv)
-        console.log(currentNoun.sv)
-        const result = word.sv === currentNoun.sv;
-        let { correct, total } = statistics;
 
-        total += 1;
-        if(result) {
-            correct += 1;
-        }
-
-        setResult(result);
-        setStatistics({ correct, total });
-    };
-    const nextNoun = () => {
-        setResult(null);
-        setCurrentNoun(words.pickRandom());
-    };
     const createAlternatives = (n: number) => {
         const alternatives = [];
         for(let i = 0; i < n; i++) {
             alternatives.push(words.pickRandom());
         }
-        return alternatives;
+        return shuffle(alternatives);
     };
+
+    const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
+    const [alternatives, setAlternatives] = useState<Word[]>([]);
+    const [statistics, setStatistics] = useState(new Statistics());
+    const [result, setResult] = useState<boolean | null>(null);
+    const checkTranslation = (word: Word) => {
+        const result = word.sv === currentNoun.sv;
+        setStatistics(statistics.updateFromResult(result));
+        setResult(result);
+    };
+    const nextNoun = () => {
+        setResult(null);
+        setCurrentNoun(words.pickRandom());
+    };
+
+    useEffect(() => {
+        const alternatives = [currentNoun, ...createAlternatives(2)];
+        setAlternatives(shuffle(alternatives));
+    }, [currentNoun]);
 
     return <Box>
         <WordCard noun={currentNoun} statistics={statistics} />
         {result === null
-            ? <Box><NounQuizChoice onSelect={checkTranslation} alternatives={[currentNoun, ...createAlternatives(2)]}/></Box>
+            ? <Box><NounQuizChoice onSelect={checkTranslation} alternatives={alternatives}/></Box>
             : <NounQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
     </Box>;
 };
+
+function shuffle<T>(array: T[]) : T[] {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
 export default NounQuiz;

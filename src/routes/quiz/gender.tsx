@@ -1,6 +1,7 @@
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
+import { Statistics } from ".";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
@@ -29,19 +30,12 @@ const Controls = (props: { onSkip: () => void }) => {
 const GenderQuiz = () => {
     const words = new Dictionary().nouns();
     const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
-    const [statistics, setStatistics] = useState({ correct: 0, total: 0});
+    const [statistics, setStatistics] = useState(new Statistics());
     const [result, setResult] = useState<boolean | null>(null);
     const checkCurrentGender = (gender: WordGender) => {
         const result = gender === currentNoun.gender;
-        let { correct, total } = statistics;
-
-        total += 1;
-        if(result) {
-            correct += 1;
-        }
-
         setResult(result);
-        setStatistics({ correct, total });
+        setStatistics(statistics.updateFromResult(result));
     };
     const nextNoun = () => {
         setResult(null);
