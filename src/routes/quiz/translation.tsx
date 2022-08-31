@@ -7,7 +7,6 @@ export function NounTranslationQuiz() {
     return <TranslationQuiz words={words} />;
 }
 
-
 export function VerbTranslationQuiz() {
     const words = new Dictionary().verbs();
     return <TranslationQuiz words={words} />;

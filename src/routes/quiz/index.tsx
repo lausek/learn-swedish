@@ -94,11 +94,12 @@ export function TranslationQuiz(props: {words: WordSet}) {
         words={props.words}
         getCorrectChoice={word => word.sv}
         getChoices={(word: Word) => {
-            const choices = [];
-            for(const choiceWord of shuffle([word, ...createAlternatives(props.words, 2)])) {
-                choices.push(choiceWord.sv);
-            }
-            return choices;
+            const choices = [
+                word.sv,
+                props.words.alternativeFor(word).sv,
+                props.words.alternativeFor(word).sv,
+            ];
+            return shuffle(choices);
         }}
         />;
 };

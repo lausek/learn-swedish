@@ -36,6 +36,10 @@ export class WordSet {
         const keys = Object.keys(this.words);
         return this.words[keys[keys.length * Math.random() << 0]];
     }
+
+    public alternativeFor(word: Word) : Word {
+        return this.pickRandom();
+    }
 }
 
 export default class Dictionary {
