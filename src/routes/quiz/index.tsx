@@ -6,8 +6,9 @@ import Dictionary, { getNounArticle, Word, WordSet } from "../../dictionary";
 import { Statistics } from "./statistics";
 
 interface QuizChoiceProps {
-    onSelect: (word: Word) => void;
+    onClick: (word: Word) => void;
     choices: QuizChoice[];
+    correctLabel?: string;
 }
 
 interface QuizChoice {
@@ -18,17 +19,10 @@ interface QuizChoice {
 const QuizChoices = (props: QuizChoiceProps) => {
     return <Box pad="medium" gap="large" direction="column" justify="center">
         {props.choices.map(choice => 
-            <Button primary label={choice.label} size="large" onClick={() => props.onSelect(choice.word)} />
+            <Button primary label={choice.label}
+                color={props.correctLabel && props.correctLabel === choice.label && "status-ok"}
+                size="large" onClick={() => props.onClick(choice.word)} />
             )}
-    </Box>;
-};
-
-const QuizResult = (props: { word: Word, result: boolean, onNext: () => void }) => {
-    return <Box pad="large" direction="row" justify="center">
-        <Button primary size="large"
-            color={props.result ? "status-ok" : "status-error"}
-            label={`${getNounArticle(props.word)} ${props.word.sv}`}
-            onClick={props.onNext} />
     </Box>;
 };
 
@@ -41,18 +35,18 @@ const Quiz = (props: {words: WordSet}) => {
         return shuffle(alternatives);
     };
 
-    const [currentWord, setCurrentNoun] = useState<Word>(props.words.pickRandom());
+    const [currentWord, setCurrentWord] = useState<Word>(props.words.pickRandom());
     const [choices, setChoices] = useState<QuizChoice[]>([]);
     const [statistics, setStatistics] = useState(new Statistics());
-    const [result, setResult] = useState<boolean | null>(null);
+    const [choice, setChoice] = useState<string | null>(null);
     const checkTranslation = (word: Word) => {
         const result = word.sv === currentWord.sv;
         setStatistics(statistics.updateFromResult(result));
-        setResult(result);
+        setChoice(currentWord.en);
     };
-    const nextNoun = () => {
-        setResult(null);
-        setCurrentNoun(props.words.pickRandom());
+    const nextWord = (word: Word) => {
+        setChoice(null);
+        setCurrentWord(props.words.pickRandom());
     };
 
     useEffect(() => {
@@ -66,9 +60,12 @@ const Quiz = (props: {words: WordSet}) => {
 
     return <Box>
         <WordCard word={currentWord} statistics={statistics} />
-        {result === null
-            ? <Box><QuizChoices onSelect={checkTranslation} choices={choices}/></Box>
-            : <QuizResult word={currentWord} result={result} onNext={nextNoun} /> }
+        <Box>
+            <QuizChoices choices={choices}
+                correctLabel={choice}
+                onClick={choice ? nextWord : checkTranslation}
+            />
+        </Box>
     </Box>;
 };
 
