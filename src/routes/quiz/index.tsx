@@ -92,12 +92,12 @@ export default Quiz;
 export function TranslationQuiz(props: {words: WordSet}) {
     return <Quiz
         words={props.words}
-        getCorrectChoice={word => word.sv}
+        getCorrectChoice={word => word.en}
         getChoices={(word: Word) => {
             const choices = [
-                word.sv,
-                props.words.alternativeFor(word).sv,
-                props.words.alternativeFor(word).sv,
+                word.en,
+                props.words.alternativeFor(word).en,
+                props.words.alternativeFor(word).en,
             ];
             return shuffle(choices);
         }}
