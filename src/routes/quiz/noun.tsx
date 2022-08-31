@@ -1,19 +1,17 @@
 import { h } from "preact";
-import Quiz, { QuizChoice } from ".";
+import Quiz from ".";
 import Dictionary, { Word, WordSet } from "../../dictionary";
 
 const NounQuiz = () => {
     const words = new Dictionary().nouns();
-    const checkTranslation = (currentWord: Word, choice: QuizChoice) => currentWord.sv == choice.word.sv;
 
     return <Quiz
         words={words}
-        onChoiceSelected={checkTranslation}
-        onChoicesWanted={(word: Word) => {
+        getCorrectChoice={word => word.sv}
+        getChoices={(word: Word) => {
             const choices = [];
             for(const choiceWord of shuffle([word, ...createAlternatives(words, 2)])) {
-                const label = choiceWord.sv;
-                choices.push({label, word: choiceWord});
+                choices.push(choiceWord.sv);
             }
             return choices;
         }}
