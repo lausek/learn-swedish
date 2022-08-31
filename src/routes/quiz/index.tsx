@@ -70,4 +70,35 @@ const Quiz = (props: QuizProps) => {
     </Box>;
 };
 
+const createAlternatives = (words: WordSet, n: number) => {
+    const alternatives = [];
+    for(let i = 0; i < n; i++) {
+        alternatives.push(words.pickRandom());
+    }
+    return alternatives;
+};
+
+
+function shuffle<T>(array: T[]) : T[] {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 export default Quiz;
+
+export function TranslationQuiz(props: {words: WordSet}) {
+    return <Quiz
+        words={props.words}
+        getCorrectChoice={word => word.sv}
+        getChoices={(word: Word) => {
+            const choices = [];
+            for(const choiceWord of shuffle([word, ...createAlternatives(props.words, 2)])) {
+                choices.push(choiceWord.sv);
+            }
+            return choices;
+        }}
+        />;
+};
