@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "GPL-3.0-only",
   "scripts": {
-    "build": "parcel build src/index.html",
+    "build": "parcel build src/index.html --public-url /learn-swedish/ ",
     "dev": "parcel src/index.html --host 0.0.0.0",
     "lint": "eslint src",
     "test": "jest"
