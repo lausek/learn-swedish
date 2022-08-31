@@ -1,17 +1,17 @@
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
+import { Box, Button } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
-const GenderQuizChoice = (props: { onSelect: (gender: WordGender) => void }) => {
+const NounQuizChoice = (props: { onSelect: (gender: WordGender) => void }) => {
     return <Box pad="medium" gap="large" direction="row" justify="center">
         <Button primary label="en" size="large" onClick={() => props.onSelect(WordGender.Utrum)} />
         <Button primary label="ett" size="large" onClick={() => props.onSelect(WordGender.Neutrum)} />
     </Box>;
 };
 
-const GenderQuizResult = (props: { noun: Word, result: boolean, onNext: () => void }) => {
+const NounQuizResult = (props: { noun: Word, result: boolean, onNext: () => void }) => {
     return <Box pad="large" direction="row" justify="center">
         <Button primary size="large"
             color={props.result ? "status-ok" : "status-error"}
@@ -20,13 +20,8 @@ const GenderQuizResult = (props: { noun: Word, result: boolean, onNext: () => vo
     </Box>;
 };
 
-const Controls = (props: { onSkip: () => void }) => {
-    return <Box pad="medium" direction="row" justify="center">
-        <Button secondary color="gray" label="Skip" size="medium" onClick={props.onSkip} />
-    </Box>;
-};
 
-const GenderQuiz = () => {
+const NounQuiz = () => {
     const words = new Dictionary().nouns();
     const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
     const [statistics, setStatistics] = useState({ correct: 0, total: 0});
@@ -49,11 +44,11 @@ const GenderQuiz = () => {
     };
 
     return <Box>
-        <WordCard explainWord noun={currentNoun} statistics={statistics} />
+        <WordCard noun={currentNoun} statistics={statistics} />
         {result === null
-            ? <Box><GenderQuizChoice onSelect={checkCurrentGender} /><Controls onSkip={nextNoun} /></Box>
-            : <GenderQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
+            ? <Box><NounQuizChoice onSelect={checkCurrentGender} /></Box>
+            : <NounQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
     </Box>;
 };
 
-export default GenderQuiz;
+export default NounQuiz;

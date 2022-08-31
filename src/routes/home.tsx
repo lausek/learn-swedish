@@ -25,11 +25,17 @@ const QuizBox = (props: QuizBoxProps) => (
 );
 
 const Quizzes = () => (
-	<Box>
+	<Box gap="20px">
 		<QuizBox
 			href="/quiz/gender"
 			title="Gender Quiz"
 			description="Guess the grammatical gender of nouns."
+			/>
+
+		<QuizBox
+			href="/quiz/noun"
+			title="Noun Quiz"
+			description="Guess the English translation of nouns."
 			/>
 	</Box>
 );

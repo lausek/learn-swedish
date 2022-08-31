@@ -6,6 +6,7 @@ import Header from './components/header';
 import { customTheme } from './components/theme';
 import Home from './routes/home';
 import GenderQuiz from './routes/quiz/gender';
+import NounQuiz from './routes/quiz/noun';
 import Settings from './routes/settings';
 
 const App = () => (
@@ -15,6 +16,7 @@ const App = () => (
 			<Router>
 				<Home path="/" />
 				<GenderQuiz path="/quiz/gender" />
+				<NounQuiz path="/quiz/noun" />
 				<Settings path="/settings" />
 			</Router>
 		</Box>
