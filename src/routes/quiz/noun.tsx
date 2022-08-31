@@ -1,6 +1,6 @@
 import { h } from "preact";
 import Quiz from ".";
-import Dictionary, { getNounArticle, Word } from "../../dictionary";
+import Dictionary from "../../dictionary";
 
 const NounQuiz = () => {
     const words = new Dictionary().nouns();

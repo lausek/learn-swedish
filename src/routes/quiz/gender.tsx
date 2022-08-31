@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
+import { Box, Button } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import { WordCard } from "../../components/word";
