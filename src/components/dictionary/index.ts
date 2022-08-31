@@ -8,6 +8,10 @@ export enum WordGender {
     Neutrum = "n",
 }
 
+export function getNounArticle(word: Word) : string {
+    return word.gender === WordGender.Utrum ? "en" : "ett";
+}
+
 export interface Word {
     sv: string;
     en: string;

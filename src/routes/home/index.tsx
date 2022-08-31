@@ -1,10 +1,10 @@
 import { Box } from "grommet";
 import { h } from "preact";
-import NounGenderQuestion from "../../components/noun";
+import GenderQuiz from "../../components/quiz/gender";
 
 const Home = () => (
 	<Box>
-		<NounGenderQuestion />
+		<GenderQuiz />
 	</Box>
 );
 
