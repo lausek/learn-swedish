@@ -1,9 +1,11 @@
-import { Box, Paragraph } from "grommet";
+import { Box, Heading, Paragraph } from "grommet";
 import { h } from "preact";
 
 const Settings = () => (
 	<Box>
-		<Paragraph>This is the Settings component.</Paragraph>
+		<Heading>
+			Settings
+		</Heading>
 	</Box>
 );
 

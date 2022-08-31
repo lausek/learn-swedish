@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, CardHeader, Heading, Text } from "grommet";
+import { Box, Card, CardBody, CardHeader, Heading, Paragraph, Text } from "grommet";
 import { h } from "preact";
 import { Link } from "preact-router";
 import GenderQuiz from "./quiz/gender";
@@ -12,14 +12,14 @@ interface QuizBoxProps {
 const QuizBox = (props: QuizBoxProps) => (
 	<Card pad="medium">
 		<CardHeader>
-			<Heading>
+			<Heading margin="small">
 				<Link href={props.href}>{props.title}</Link>
 			</Heading>
 		</CardHeader>
 		<CardBody>
-			<Text>
+			<Paragraph>
 				{props.description}
-			</Text>
+			</Paragraph>
 		</CardBody>
 	</Card>
 );
