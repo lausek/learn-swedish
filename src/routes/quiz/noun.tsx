@@ -4,10 +4,16 @@ import { useState } from "preact/hooks";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
-const NounQuizChoice = (props: { onSelect: (gender: WordGender) => void }) => {
-    return <Box pad="medium" gap="large" direction="row" justify="center">
-        <Button primary label="en" size="large" onClick={() => props.onSelect(WordGender.Utrum)} />
-        <Button primary label="ett" size="large" onClick={() => props.onSelect(WordGender.Neutrum)} />
+interface NounQuizChoiceProps {
+    onSelect: (word: Word) => void;
+    alternatives: Word[];
+}
+
+const NounQuizChoice = (props: NounQuizChoiceProps) => {
+    return <Box pad="medium" gap="large" direction="column" justify="center">
+        {props.alternatives.map(word => 
+            <Button primary label={word.en} size="large" onClick={() => props.onSelect(word)} />
+        )}
     </Box>;
 };
 
@@ -20,14 +26,15 @@ const NounQuizResult = (props: { noun: Word, result: boolean, onNext: () => void
     </Box>;
 };
 
-
 const NounQuiz = () => {
     const words = new Dictionary().nouns();
     const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
     const [statistics, setStatistics] = useState({ correct: 0, total: 0});
     const [result, setResult] = useState<boolean | null>(null);
-    const checkCurrentGender = (gender: WordGender) => {
-        const result = gender === currentNoun.gender;
+    const checkTranslation = (word: Word) => {
+        console.log(word.sv)
+        console.log(currentNoun.sv)
+        const result = word.sv === currentNoun.sv;
         let { correct, total } = statistics;
 
         total += 1;
@@ -42,11 +49,18 @@ const NounQuiz = () => {
         setResult(null);
         setCurrentNoun(words.pickRandom());
     };
+    const createAlternatives = (n: number) => {
+        const alternatives = [];
+        for(let i = 0; i < n; i++) {
+            alternatives.push(words.pickRandom());
+        }
+        return alternatives;
+    };
 
     return <Box>
         <WordCard noun={currentNoun} statistics={statistics} />
         {result === null
-            ? <Box><NounQuizChoice onSelect={checkCurrentGender} /></Box>
+            ? <Box><NounQuizChoice onSelect={checkTranslation} alternatives={[currentNoun, ...createAlternatives(2)]}/></Box>
             : <NounQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
     </Box>;
 };
