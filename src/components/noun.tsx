@@ -1,23 +1,8 @@
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import dictionaryJson from "./dictionary-en.json";
+import Dictionary, { Word, WordGender } from "./dictionary";
 
-enum WordGender {
-    Utrum = "u",
-    Neutrum = "n",
-}
-
-interface Word {
-    sv: string;
-    en: string;
-    gender: WordGender;
-    lexcat: "noun" | "verb" | "adj";
-    pluarl?: boolean;
-    detail: string;
-}
-
-interface Dictionary { [key: string]: Word }
 interface Statistics {
     correct: number;
     total: number;
@@ -56,13 +41,11 @@ const NounGenderChoice = (props: { onSelect: (gender: WordGender) => void }) => 
 
 const NounGenderResult = (props: { noun: Word, result: boolean, onNext: () => void }) => {
     return <Box pad="large" direction="row" justify="center">
-        <Button primary size="large" color={props.result ? "status-ok" : "status-error"} label={`${getGenderArticle(props.noun.gender)} ${props.noun.sv}`} onClick={props.onNext} />
+        <Button primary size="large"
+            color={props.result ? "status-ok" : "status-error"}
+            label={`${getGenderArticle(props.noun.gender)} ${props.noun.sv}`}
+            onClick={props.onNext} />
     </Box>;
-};
-
-const pickRandom = (dictionary: Dictionary) => {
-    const keys = Object.keys(dictionary);
-    return dictionary[keys[keys.length * Math.random() << 0]];
 };
 
 const Controls = (props: { onSkip: () => void }) => {
@@ -72,8 +55,8 @@ const Controls = (props: { onSkip: () => void }) => {
 };
 
 const NounGenderQuestion = () => {
-    const dictionary = dictionaryJson as Dictionary;
-    const [currentNoun, setCurrentNoun] = useState<Word>(pickRandom(dictionary));
+    const words = new Dictionary().nouns();
+    const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
     const [statistics, setStatistics] = useState({ correct: 0, total: 0});
     const [result, setResult] = useState<boolean | null>(null);
     const checkCurrentGender = (gender: WordGender) => {
@@ -90,7 +73,7 @@ const NounGenderQuestion = () => {
     };
     const nextNoun = () => {
         setResult(null);
-        setCurrentNoun(pickRandom(dictionary));
+        setCurrentNoun(words.pickRandom());
     };
 
     return <Box>

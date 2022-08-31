@@ -2,9 +2,8 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from operator import is_
 from pathlib import Path
-from typing import Dict, Generator, Optional, Tuple
+from typing import Dict, Generator, List, Optional, Tuple
 
 import json
 import re
@@ -31,6 +30,9 @@ class Word:
     def is_noun(self) -> bool:
         return "noun" in self.lexcat
 
+    def is_verb(self) -> bool:
+        return "verb" in self.lexcat
+
     def is_singular(self) -> bool:
         return self.plural is not None and not self.plural
 
@@ -39,23 +41,40 @@ def main():
     assert 1 < len(sys.argv), "No source dictionary specified."
 
     root_dir = Path(sys.argv[0]).absolute().parent.parent
-    output_path = root_dir / "src" / "components" / "dictionary-en.json"
+    output_path = root_dir / "src" / "components" / "dictionary"
     source_path = sys.argv[1]
+
+    dictionary_raw = list(source_dictionary(source_path))
+
+    noun_dictionary = collect_dictionary(dictionary_raw, isNounAndSingular)
+    output_dictionary(output_path / "nouns.json", noun_dictionary)
+
+    verb_dictionary = collect_dictionary(dictionary_raw, isVerb)
+    output_dictionary(output_path / "verbs.json", verb_dictionary)
+
+
+def isNounAndSingular(word: Word) -> bool:
+    return word.is_noun() and word.is_singular()
+
+def isVerb(word: Word) -> bool:
+    return word.is_verb()
+
+def collect_dictionary(dict_raw: List[str], word_filter) -> Dict[str, Word]:
     dictionary = {}
 
-    for line in source_dictionary(source_path):
+    for line in dict_raw:
         try:
             word = parse_word(line)
 
-            if word.is_noun() and word.is_singular():
+            if word_filter(word):
                 dictionary[word.sv] = word
 
         except Exception as e:
             print(f"WARNING Skipping: {line}. {e}")
 
-    print("Collected", len(dictionary), "nouns.")
+    print("Collected", len(dictionary), "words.")
 
-    output_dictionary(output_path, dictionary)
+    return dictionary
 
 
 def source_dictionary(path: str) -> Generator[str, None, None]:
