@@ -5,15 +5,22 @@ import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordSet } from "../../dictionary";
 import { Statistics } from "./statistics";
 
-interface QuizChoiceProps {
-    onClick: (word: Word) => void;
-    choices: QuizChoice[];
-    correctLabel?: string;
-}
-
-interface QuizChoice {
+export interface QuizChoice {
     label: string;
     word: Word;
+}
+
+interface QuizProps {
+    words: WordSet;
+    explainWord?: boolean;
+    onChoiceSelected: (currentWord: Word, choice: QuizChoice) => boolean;
+    onChoicesWanted: (word: Word) => QuizChoice[];
+}
+
+interface QuizChoiceProps {
+    onClick: (word: QuizChoice) => void;
+    choices: QuizChoice[];
+    correctLabel?: string;
 }
 
 const QuizChoices = (props: QuizChoiceProps) => {
@@ -21,60 +28,47 @@ const QuizChoices = (props: QuizChoiceProps) => {
         {props.choices.map(choice => 
             <Button primary label={choice.label}
                 color={props.correctLabel && props.correctLabel === choice.label && "status-ok"}
-                size="large" onClick={() => props.onClick(choice.word)} />
+                size="large" onClick={() => props.onClick(choice)} />
             )}
     </Box>;
 };
 
-const Quiz = (props: {words: WordSet}) => {
-    const createAlternatives = (n: number) => {
-        const alternatives = [];
-        for(let i = 0; i < n; i++) {
-            alternatives.push(props.words.pickRandom());
-        }
-        return shuffle(alternatives);
-    };
+const Controls = (props: { onSkip: (_: any) => void }) => {
+    return <Box pad="medium" direction="row" justify="center">
+        <Button secondary color="gray" label="Skip" size="medium" onClick={props.onSkip} />
+    </Box>;
+};
 
+const Quiz = (props: QuizProps) => {
     const [currentWord, setCurrentWord] = useState<Word>(props.words.pickRandom());
     const [choices, setChoices] = useState<QuizChoice[]>([]);
     const [statistics, setStatistics] = useState(new Statistics());
     const [choice, setChoice] = useState<string | null>(null);
-    const checkTranslation = (word: Word) => {
-        const result = word.sv === currentWord.sv;
-        setStatistics(statistics.updateFromResult(result));
-        setChoice(currentWord.en);
-    };
-    const nextWord = (word: Word) => {
+    const onNextWord = (quizChoice: QuizChoice) => {
         setChoice(null);
         setCurrentWord(props.words.pickRandom());
     };
+    const onChoiceSelected = (quizChoice: QuizChoice) => {
+        const result = props.onChoiceSelected(currentWord, quizChoice);
+        setStatistics(statistics.updateFromResult(result));
+        setChoice(quizChoice.label);
+    };
 
     useEffect(() => {
-        const choices = [];
-        for(const word of [currentWord, ...createAlternatives(2)]) {
-            const label = word.en;
-            choices.push({ label, word });
-        }
-        setChoices(shuffle(choices));
+        setChoices(props.onChoicesWanted(currentWord));
     }, [currentWord]);
 
     return <Box>
-        <WordCard word={currentWord} statistics={statistics} />
+        <WordCard explainWord={props.explainWord} word={currentWord} statistics={statistics} />
         <Box>
-            <QuizChoices choices={choices}
+            <QuizChoices
+                choices={choices}
                 correctLabel={choice}
-                onClick={choice ? nextWord : checkTranslation}
+                onClick={choice ? onNextWord : onChoiceSelected}
             />
+            <Controls onSkip={onNextWord} />
         </Box>
     </Box>;
 };
-
-function shuffle<T>(array: T[]) : T[] {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
 
 export default Quiz;

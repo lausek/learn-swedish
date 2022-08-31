@@ -1,8 +1,9 @@
 import { Box, Button } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
+import Quiz, { QuizChoice } from ".";
 import { WordCard } from "../../components/word";
-import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
+import Dictionary, { getGenderArticle, getNounArticle, Word, WordGender } from "../../dictionary";
 import { Statistics } from "./statistics";
 
 const GenderQuizChoice = (props: { onSelect: (gender: WordGender) => void }) => {
@@ -21,33 +22,22 @@ const GenderQuizResult = (props: { noun: Word, result: boolean, onNext: () => vo
     </Box>;
 };
 
-const Controls = (props: { onSkip: () => void }) => {
-    return <Box pad="medium" direction="row" justify="center">
-        <Button secondary color="gray" label="Skip" size="medium" onClick={props.onSkip} />
-    </Box>;
-};
 
 const GenderQuiz = () => {
     const words = new Dictionary().nouns();
-    const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
-    const [statistics, setStatistics] = useState(new Statistics());
-    const [result, setResult] = useState<boolean | null>(null);
-    const checkCurrentGender = (gender: WordGender) => {
-        const result = gender === currentNoun.gender;
-        setResult(result);
-        setStatistics(statistics.updateFromResult(result));
-    };
-    const nextNoun = () => {
-        setResult(null);
-        setCurrentNoun(words.pickRandom());
-    };
+    const checkGender = (currentWord: Word, choice: QuizChoice) => getGenderArticle(currentWord.gender) == choice.label;
 
-    return <Box>
-        <WordCard explainWord word={currentNoun} statistics={statistics} />
-        {result === null
-            ? <Box><GenderQuizChoice onSelect={checkCurrentGender} /><Controls onSkip={nextNoun} /></Box>
-            : <GenderQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
-    </Box>;
+    return <Quiz
+        explainWord
+        words={words}
+        onChoiceSelected={checkGender}
+        onChoicesWanted={(word: Word) => {
+            return [
+                {label: getGenderArticle(WordGender.Utrum), word, },
+                {label: getGenderArticle(WordGender.Neutrum), word, },
+            ];
+        }}
+        />
 };
 
 export default GenderQuiz;
