@@ -5,7 +5,9 @@ import { Link } from 'preact-router/match';
 
 const Header = () => (
 	<GrommetHeader background="brand" pad={{vertical: "xsmall", horizontal: "medium"}}>
-		<Heading color="accent-1">Learn Swedish</Heading>
+		<Heading color="accent-1">
+			<Link href="/">Learn Swedish</Link>
+		</Heading>
 		{/*
 		<Nav direction="row" pad="medium" gap="20px">
 			<Link href="/"><HomeRounded color="accent-1" /></Link>
