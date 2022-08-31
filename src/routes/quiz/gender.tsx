@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Text } from "grommet";
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import Dictionary, { getNounArticle, Word, WordGender } from "../dictionary";
+import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
 interface Statistics {
     correct: number;
