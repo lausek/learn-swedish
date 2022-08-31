@@ -37,6 +37,12 @@ const Quizzes = () => (
 			title="Noun Quiz"
 			description="Guess the English translation of nouns."
 			/>
+
+		<QuizBox
+			href="/quiz/verb"
+			title="Verb Quiz"
+			description="Guess the English translation of verbs."
+			/>
 	</Box>
 );
 

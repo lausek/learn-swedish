@@ -7,6 +7,7 @@ import { customTheme } from './components/theme';
 import Home from './routes/home';
 import GenderQuiz from './routes/quiz/gender';
 import NounQuiz from './routes/quiz/noun';
+import VerbQuiz from './routes/quiz/verb';
 import Settings from './routes/settings';
 
 const App = () => (
@@ -17,6 +18,7 @@ const App = () => (
 				<Home path="/" />
 				<GenderQuiz path="/quiz/gender" />
 				<NounQuiz path="/quiz/noun" />
+				<VerbQuiz path="/quiz/verb" />
 				<Settings path="/settings" />
 			</Router>
 		</Box>

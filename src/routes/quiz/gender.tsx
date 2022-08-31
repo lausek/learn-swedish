@@ -43,7 +43,7 @@ const GenderQuiz = () => {
     };
 
     return <Box>
-        <WordCard explainWord noun={currentNoun} statistics={statistics} />
+        <WordCard explainWord word={currentNoun} statistics={statistics} />
         {result === null
             ? <Box><GenderQuizChoice onSelect={checkCurrentGender} /><Controls onSkip={nextNoun} /></Box>
             : <GenderQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }

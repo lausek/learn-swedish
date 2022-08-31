@@ -5,12 +5,12 @@ import { Statistics } from ".";
 import { WordCard } from "../../components/word";
 import Dictionary, { getNounArticle, Word, WordGender } from "../../dictionary";
 
-interface NounQuizChoiceProps {
+interface VerbQuizChoiceProps {
     onSelect: (word: Word) => void;
     alternatives: Word[];
 }
 
-const NounQuizChoice = (props: NounQuizChoiceProps) => {
+const VerbQuizChoice = (props: VerbQuizChoiceProps) => {
     return <Box pad="medium" gap="large" direction="column" justify="center">
         {props.alternatives.map(word => 
             <Button primary label={word.en} size="large" onClick={() => props.onSelect(word)} />
@@ -18,17 +18,17 @@ const NounQuizChoice = (props: NounQuizChoiceProps) => {
     </Box>;
 };
 
-const NounQuizResult = (props: { noun: Word, result: boolean, onNext: () => void }) => {
+const VerbQuizResult = (props: { word: Word, result: boolean, onNext: () => void }) => {
     return <Box pad="large" direction="row" justify="center">
         <Button primary size="large"
             color={props.result ? "status-ok" : "status-error"}
-            label={`${getNounArticle(props.noun)} ${props.noun.sv}`}
+            label={props.word.en}
             onClick={props.onNext} />
     </Box>;
 };
 
-const NounQuiz = () => {
-    const words = new Dictionary().nouns();
+const VerbQuiz = () => {
+    const words = new Dictionary().verbs();
 
     const createAlternatives = (n: number) => {
         const alternatives = [];
@@ -38,30 +38,30 @@ const NounQuiz = () => {
         return shuffle(alternatives);
     };
 
-    const [currentNoun, setCurrentNoun] = useState<Word>(words.pickRandom());
+    const [currentWord, setCurrentWord] = useState<Word>(words.pickRandom());
     const [alternatives, setAlternatives] = useState<Word[]>([]);
     const [statistics, setStatistics] = useState(new Statistics());
     const [result, setResult] = useState<boolean | null>(null);
     const checkTranslation = (word: Word) => {
-        const result = word.sv === currentNoun.sv;
+        const result = word.sv === currentWord.sv;
         setStatistics(statistics.updateFromResult(result));
         setResult(result);
     };
-    const nextNoun = () => {
+    const nextWord = () => {
         setResult(null);
-        setCurrentNoun(words.pickRandom());
+        setCurrentWord(words.pickRandom());
     };
 
     useEffect(() => {
-        const alternatives = [currentNoun, ...createAlternatives(2)];
+        const alternatives = [currentWord, ...createAlternatives(2)];
         setAlternatives(shuffle(alternatives));
-    }, [currentNoun]);
+    }, [currentWord]);
 
     return <Box>
-        <WordCard word={currentNoun} statistics={statistics} />
+        <WordCard word={currentWord} statistics={statistics} />
         {result === null
-            ? <Box><NounQuizChoice onSelect={checkTranslation} alternatives={alternatives}/></Box>
-            : <NounQuizResult noun={currentNoun} result={result} onNext={nextNoun} /> }
+            ? <Box><VerbQuizChoice onSelect={checkTranslation} alternatives={alternatives}/></Box>
+            : <VerbQuizResult word={currentWord} result={result} onNext={nextWord} /> }
     </Box>;
 };
 
@@ -73,4 +73,4 @@ function shuffle<T>(array: T[]) : T[] {
     return array;
 }
 
-export default NounQuiz;
+export default VerbQuiz;

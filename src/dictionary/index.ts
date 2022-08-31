@@ -38,4 +38,8 @@ export default class Dictionary {
     public nouns(): WordSet {
         return new WordSet(nouns as JsonDictionary);
     }
+
+    public verbs(): WordSet {
+        return new WordSet(verbs as JsonDictionary);
+    }
 }

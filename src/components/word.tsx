@@ -6,7 +6,7 @@ import { Statistics } from "../routes/quiz";
 const Annotation = (props: any) => <Text color="gray">{props.children}</Text>;
 
 interface WordCardProps {
-    noun: Word;
+    word: Word;
     statistics: Statistics;
     explainWord?: boolean
 }
@@ -16,13 +16,13 @@ export function WordCard(props: WordCardProps) {
         <Card>
             <CardHeader pad={{top: "large", bottom: "medium", horizontal: "medium"}}>
                 <Text size="xlarge">
-                    {props.noun.sv} <Annotation>[sv]</Annotation>
+                    {props.word.sv} <Annotation>[sv]</Annotation>
                 </Text>
             </CardHeader>
             <CardBody pad={{vertical: "medium", horizontal: "medium"}}>
                 {props.explainWord && (
                     <Text size="medium" weight="lighter">
-                        {props.noun.en} <Annotation>[en]</Annotation>
+                        {props.word.en} <Annotation>[en]</Annotation>
                     </Text>
                 )}
             </CardBody>
