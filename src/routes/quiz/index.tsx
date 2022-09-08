@@ -4,6 +4,7 @@ import { useEffect, useState } from "preact/hooks";
 import { WordCard } from "../../components/word";
 import { Word, WordSet } from "../../dictionary";
 import { Statistics } from "./statistics";
+import 'animate.css';
 
 export type QuizChoice = string;
 
@@ -17,17 +18,23 @@ interface QuizProps {
 interface QuizChoiceProps {
     onClick: (word: QuizChoice) => void;
     choices: QuizChoice[];
+    currentChoice?: string;
     correctChoice?: string;
 }
 
 const QuizChoices = (props: QuizChoiceProps) => {
     return <Box pad="medium" gap="large" direction="column" justify="center">
-        {props.choices.map(choice => 
+        {props.choices.map(choice => (
             <Button primary
+                className="animate__animated"
                 label={choice}
-                color={props.correctChoice && props.correctChoice === choice && "status-ok"}
-                size="large" onClick={() => props.onClick(choice)} />
-            )}
+                color={props.currentChoice && props.correctChoice === choice && "status-ok"}
+                size="large" onClick={(event: any) => {
+                    const animation = props.correctChoice === choice ? "animate__tada" : "animate__headShake";
+                    event.target.classList.toggle(animation);
+                    setTimeout(() => props.onClick(choice), 500);
+                }} />
+            ))}
     </Box>;
 };
 
@@ -42,19 +49,21 @@ const Quiz = (props: QuizProps) => {
     const [choices, setChoices] = useState<QuizChoice[]>([]);
     const [statistics, setStatistics] = useState(new Statistics());
     const [correctChoice, setCorrectChoice] = useState<QuizChoice | null>(null);
+    const [currentChoice, setCurrentChoice] = useState<QuizChoice | null>(null);
+
     const onNextWord = (quizChoice: QuizChoice) => {
-        setCorrectChoice(null);
         setCurrentWord(props.words.pickRandom());
     };
     const onChoiceSelected = (quizChoice: QuizChoice) => {
-        const correctChoice = props.getCorrectChoice(currentWord);
         const result = correctChoice == quizChoice;
         setStatistics(statistics.updateFromResult(result));
-        setCorrectChoice(correctChoice);
+        setCurrentChoice(quizChoice);
     };
 
     useEffect(() => {
         setChoices(props.getChoices(currentWord));
+        setCorrectChoice(props.getCorrectChoice(currentWord));
+        setCurrentChoice(null);
     }, [currentWord]);
 
     return <Box>
@@ -62,22 +71,14 @@ const Quiz = (props: QuizProps) => {
         <Box>
             <QuizChoices
                 choices={choices}
+                currentChoice={currentChoice}
                 correctChoice={correctChoice}
-                onClick={correctChoice ? onNextWord : onChoiceSelected}
+                onClick={currentChoice ? onNextWord : onChoiceSelected}
             />
             <Controls onSkip={onNextWord} />
         </Box>
     </Box>;
 };
-
-const createAlternatives = (words: WordSet, n: number) => {
-    const alternatives = [];
-    for(let i = 0; i < n; i++) {
-        alternatives.push(words.pickRandom());
-    }
-    return alternatives;
-};
-
 
 function shuffle<T>(array: T[]) : T[] {
     for (let i = array.length - 1; i > 0; i--) {
