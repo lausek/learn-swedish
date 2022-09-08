@@ -13,7 +13,7 @@ const App = () => (
 	<Grommet theme={customTheme} full>
 		<Header />
 		<Box pad={{vertical: "large", horizontal: "medium"}}>
-			<Router>
+			<Router basename={process.env.PUBLIC_URL}>
 				<Home path="/" />
 				<GenderQuiz path="/quiz/gender" />
 				<NounTranslationQuiz path="/quiz/noun" />
