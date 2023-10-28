@@ -22,6 +22,7 @@
     "eslint": "^6.0.1",
     "eslint-config-preact": "^1.1.0",
     "parcel": "^2.7.0",
+    "process": "^0.11.10",
     "sirv-cli": "^1.0.3",
     "typescript": "^4.8.2"
   },
@@ -33,7 +34,9 @@
     "preact": "^10.3.2",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "workbox-precaching": "^7.0.0",
+    "workbox-routing": "^7.0.0"
   },
   "alias": {
     "react": "preact/compat",

@@ -1,5 +1,20 @@
 import { manifest, version } from '@parcel/service-worker';
-import { setupRouting } from 'preact-cli/sw/';
+import { registerRoute, setCatchHandler } from 'workbox-routing';
+import { getCacheKeyForURL } from 'workbox-precaching';
+
+export function isNav(event) {
+  return event.request.mode === 'navigate'
+};
+
+export const NETWORK_HANDLER = new NetworkFirst({
+	cacheName: cacheNames.precache,
+	networkTimeoutSeconds: 5,
+	plugins: [
+		new CacheableResponsePlugin({
+			statuses: [200],
+		}),
+	],
+});
 
 async function install() {
   const cache = await caches.open(version);
@@ -16,4 +31,13 @@ async function activate() {
 }
 addEventListener('activate', e => e.waitUntil(activate()));
 
-setupRouting();
+registerRoute(({ event }) => isNav(event), NETWORK_HANDLER);
+
+setCatchHandler(({ event }) => {
+	if (isNav(event)) {
+		return caches.match(
+			getCacheKeyForURL('/200.html') || getCacheKeyForURL('/index.html')
+		);
+	}
+	return Response.error();
+});
