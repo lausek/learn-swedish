@@ -14,11 +14,11 @@ const App = () => (
 		<Header />
 		<Box pad={{vertical: "large", horizontal: "medium"}}>
 			<Router basename={process.env.PUBLIC_URL}>
-				<Home path="/" />
 				<GenderQuiz path="/quiz/gender" />
 				<NounTranslationQuiz path="/quiz/noun" />
 				<VerbTranslationQuiz path="/quiz/verb" />
 				<Settings path="/settings" />
+				<Home default path="/" />
 			</Router>
 		</Box>
 		<Footer />
