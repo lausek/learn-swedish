@@ -1,7 +1,5 @@
 # Learn Swedish
 
-## CLI Commands
-
 ``` bash
 # install dependencies
 yarn install
@@ -12,8 +10,6 @@ yarn dev
 # build for production with minification
 yarn build
 
-# run tests with jest and enzyme
-yarn test
+# release a new version
+./do publish
 ```
-
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
